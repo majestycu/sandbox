@@ -1,0 +1,28 @@
+image: gradle:jdk11
+
+before_script:
+  - export GRADLE_USER_HOME=`pwd`/.gradle
+  - chmod +x ./gradlew
+
+cache:
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+packagebuild:
+  stage: build
+  script:
+    - ./gradlew assemble
+
+
+jobtest:
+  stage: test
+  script:
+    - ./gradlew clean test --info
+    - ./gradlew aggregate
+  allow_failure: true
+  artifacts:
+    name: "artifacts-$CI_PIPELINE_ID"
+    paths:
+    - target/site/
+    expire_in: 1 week

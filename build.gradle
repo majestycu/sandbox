@@ -1,0 +1,42 @@
+
+repositories {
+    mavenLocal()
+    jcenter()
+    mavenCentral()
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+    dependencies {
+        classpath("net.serenity-bdd:serenity-gradle-plugin:2.3.13")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'net.serenity-bdd.aggregator'
+
+dependencies {
+    testCompile "net.serenity-bdd:serenity-core:2.3.13"
+    testCompile "net.serenity-bdd:serenity-cucumber6:2.3.13"
+    testCompile "net.serenity-bdd:serenity-rest-assured:2.3.13"
+    testCompile "io.cucumber:cucumber-junit:6.10.0"
+    testCompile "io.cucumber:cucumber-java:6.10.0"
+    testCompile "org.slf4j:slf4j-nop:1.7.25"
+    testCompile "com.fasterxml.jackson.core:jackson-annotations:2.12.1"
+}
+
+serenity {
+    reports = ["single-page-html"]
+}
+
+test.finalizedBy(aggregate)
+
+test {
+    systemProperties(System.getProperties())
+}
+
+gradle.startParameter.continueOnFailure = true
